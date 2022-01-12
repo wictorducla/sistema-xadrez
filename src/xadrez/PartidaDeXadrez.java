@@ -1,5 +1,7 @@
 package xadrez;
 
+import jogoDeTabuleiro.Peca;
+import jogoDeTabuleiro.Posicao;
 import jogoDeTabuleiro.Tabuleiro;
 import xadrez.pecas.Rei;
 import xadrez.pecas.Torre;
@@ -23,14 +25,45 @@ public class PartidaDeXadrez {
 		return mat;
 	}
 	
+	public PecaDeXadrez movimentoXadrez(PosicaoXadrez posicaoOrigem, PosicaoXadrez posicaoAlvo ) {
+		Posicao origem = posicaoOrigem.toPosicao();
+		Posicao alvo = posicaoAlvo.toPosicao();
+		validarPosicaoOrigem(origem);
+		Peca pecaCapturada = mover(origem, alvo);
+		return (PecaDeXadrez)pecaCapturada;
+	}
+	
+	private Peca mover(Posicao origem, Posicao alvo) {
+		Peca p = tabuleiro.removerPeca(origem);
+		Peca pecaCapturada = tabuleiro.removerPeca(alvo);
+		tabuleiro.colocarPeca(p, alvo);
+		return pecaCapturada;
+	}
+	
+	private void validarPosicaoOrigem(Posicao posicao) {
+		if(!tabuleiro.temUmaPeca(posicao)) {
+			throw new ExcecaoXadrez("Tem uma peça na posição de origem");
+		}
+	}
+	
 	private void colocarNovaPeca(char coluna, int linha, PecaDeXadrez peca) {
 		tabuleiro.colocarPeca(peca, new PosicaoXadrez(coluna, linha).toPosicao());
 		
 	}
 	
 	private void iniciarPartida() {
-		colocarNovaPeca('a', 1, new Torre(tabuleiro, Cor.BRANCO));
-		colocarNovaPeca('e', 8 ,new Rei(tabuleiro, Cor.PRETO));
-		colocarNovaPeca('e', 1, new Rei(tabuleiro, Cor.BRANCO));
+		colocarNovaPeca('c', 1, new Torre(tabuleiro, Cor.BRANCO));
+		colocarNovaPeca('c', 2, new Torre(tabuleiro, Cor.BRANCO));
+		colocarNovaPeca('d', 2, new Torre(tabuleiro, Cor.BRANCO));
+		colocarNovaPeca('e', 2, new Torre(tabuleiro, Cor.BRANCO));
+		colocarNovaPeca('e', 1, new Torre(tabuleiro, Cor.BRANCO));
+		colocarNovaPeca('d', 1, new Rei(tabuleiro, Cor.BRANCO));
+
+		colocarNovaPeca('c', 7, new Torre(tabuleiro, Cor.PRETO));
+		colocarNovaPeca('c', 8, new Torre(tabuleiro, Cor.PRETO));
+		colocarNovaPeca('d', 7, new Torre(tabuleiro, Cor.PRETO));
+		colocarNovaPeca('e', 7, new Torre(tabuleiro, Cor.PRETO));
+		colocarNovaPeca('e', 8, new Torre(tabuleiro, Cor.PRETO));
+		colocarNovaPeca('d', 8, new Rei(tabuleiro, Cor.PRETO));
 	}
 }
