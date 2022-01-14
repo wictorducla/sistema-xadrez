@@ -1,11 +1,11 @@
-package aplicacao;
+package application;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import xadrez.Cor;
-import xadrez.PecaDeXadrez;
-import xadrez.PosicaoXadrez;
+import chess.Color;
+import chess.ChessPiece;
+import chess.ChessPosition;
 
 public class UI {
 
@@ -36,36 +36,50 @@ public class UI {
 		System.out.flush();
 	}
 
-	public static PosicaoXadrez lerPosicaoXadrez(Scanner ler) {
+	public static ChessPosition readChessPosition(Scanner ler) {
 		try {
 			String s = ler.nextLine();
-			char coluna = s.charAt(0);
-			int linha = Integer.parseInt(s.substring(1));
-			return new PosicaoXadrez(coluna, linha);
+			char column = s.charAt(0);
+			int row = Integer.parseInt(s.substring(1));
+			return new ChessPosition(column, row);
 		} catch (RuntimeException e) {
 			throw new InputMismatchException("Erro lendo posicao de xadrez. Valores validos sao de a1 ate h8.");
 		}
 	}
 
-	public static void printTabuleiro(PecaDeXadrez[][] pecas) {
-		for (int i = 0; i < pecas.length; i++) {
+	public static void printBoard(ChessPiece[][] pieces) {
+		for (int i = 0; i < pieces.length; i++) {
 			System.out.print(8 - i + " ");
-			for (int j = 0; j < pecas.length; j++) {
-				printPeca(pecas[i][j]);
+			for (int j = 0; j < pieces.length; j++) {
+				printPiece(pieces[i][j], false);
+			}
+			System.out.println();
+		}
+		System.out.print("  a b c d e f g h");
+	}
+	
+	public static void printBoard(ChessPiece[][] pieces, boolean[][] movimentosPossiveis) {
+		for (int i = 0; i < pieces.length; i++) {
+			System.out.print(8 - i + " ");
+			for (int j = 0; j < pieces.length; j++) {
+				printPiece(pieces[i][j], movimentosPossiveis[i][j]);
 			}
 			System.out.println();
 		}
 		System.out.print("  a b c d e f g h");
 	}
 
-	private static void printPeca(PecaDeXadrez peca) {
-		if (peca == null) {
+	private static void printPiece(ChessPiece piece, boolean background) {
+		if (background) {
+			System.out.print(ANSI_BLUE_BACKGROUND);
+		}
+		if (piece == null) {
 			System.out.print("-");
 		} else {
-			if (peca.getCor() == Cor.BRANCO) {
-				System.out.print(ANSI_WHITE + peca + ANSI_RESET);
+			if (piece.getColor() == Color.WHITE) {
+				System.out.print(ANSI_WHITE + piece + ANSI_RESET);
 			} else {
-				System.out.print(ANSI_YELLOW + peca + ANSI_RESET);
+				System.out.print(ANSI_YELLOW + piece + ANSI_RESET);
 			}
 		}
 		System.out.print(" ");
